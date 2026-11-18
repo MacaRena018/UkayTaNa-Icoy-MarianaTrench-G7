@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Administrator Dashboard</h2>
+<ul>
+    <li>Total users: {{ total_users }}</li>
+    <li>Buyers: {{ buyer_count }}</li>
+    <li>Sellers: {{ seller_count }}</li>
+    <li>Suspended accounts: {{ suspended_count }}</li>
+</ul>
+<h3>Admin Tools</h3>
+<ul>
+    <li><a href="#">Add / Edit Stores</a></li>
+    <li><a href="#">Verify Stores and Operating Hours</a></li>
+    <li><a href="/admin/accounts/customuser/">Suspend / Reactivate Accounts</a></li>
+</ul>
+{% endblock %}
