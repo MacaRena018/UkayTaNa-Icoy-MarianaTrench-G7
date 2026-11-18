@@ -1,11 +1,15 @@
 {% extends "base.html" %}
+{% block title %}Create account · UkayTaNa{% endblock %}
 {% block content %}
-<h2>Join UkayTaNa</h2>
-<p>Shoppers: find verified ukay-ukay stores and browse listings. Sellers: publish your shop and items.</p>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create account</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+<section class="form-card form-card-wide">
+    <p class="eyebrow">JOIN THE COMMUNITY</p>
+    <h1>Make room for a great find.</h1>
+    <p class="muted">Create a buyer account to explore Cebu's ukay-ukay community, or sign up as a seller to introduce your shop.</p>
+    <form method="post" class="account-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button button-primary button-wide" type="submit">Create my account</button>
+    </form>
+    <p class="form-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+</section>
 {% endblock %}

@@ -1,16 +1,22 @@
 {% extends "base.html" %}
+{% block title %}Administrator dashboard · UkayTaNa{% endblock %}
 {% block content %}
-<h2>Administrator Dashboard</h2>
-<ul>
-    <li>Total users: {{ total_users }}</li>
-    <li>Buyers: {{ buyer_count }}</li>
-    <li>Sellers: {{ seller_count }}</li>
-    <li>Suspended accounts: {{ suspended_count }}</li>
-</ul>
-<h3>Admin Tools</h3>
-<ul>
-    <li><a href="#">Add / Edit Stores</a></li>
-    <li><a href="#">Verify Stores and Operating Hours</a></li>
-    <li><a href="/admin/accounts/customuser/">Suspend / Reactivate Accounts</a></li>
-</ul>
+<section class="welcome-panel">
+    <p class="eyebrow">ADMIN DASHBOARD</p>
+    <h1>Community overview</h1>
+    <p>Manage accounts and keep the UkayTaNa community running smoothly.</p>
+</section>
+<div class="stats-grid">
+    <article class="stat-card"><span>Total users</span><strong>{{ total_users }}</strong></article>
+    <article class="stat-card"><span>Buyers</span><strong>{{ buyer_count }}</strong></article>
+    <article class="stat-card"><span>Sellers</span><strong>{{ seller_count }}</strong></article>
+    <article class="stat-card"><span>Suspended</span><strong>{{ suspended_count }}</strong></article>
+</div>
+<section class="content-card dashboard-action">
+    <div>
+        <h2>Account administration</h2>
+        <p class="muted">Review users, update roles, and manage account access.</p>
+    </div>
+    <a class="button button-primary" href="{% url 'admin:accounts_customuser_changelist' %}">Manage accounts</a>
+</section>
 {% endblock %}

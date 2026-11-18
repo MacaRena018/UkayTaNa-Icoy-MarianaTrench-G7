@@ -1,15 +1,28 @@
 {% extends "base.html" %}
+{% block title %}Buyer dashboard · UkayTaNa{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
-<h3>Featured Listings</h3>
-<p>Women's secondhand clothing from sellers around Metro Cebu will appear here.</p>
-<h3>Nearby Verified Stores</h3>
-<p>Field-verified ukay-ukay stores near {{ user.barangay|default:user.city }} will appear here.</p>
-<h3>Quick Links</h3>
-<ul>
-    <li><a href="#">Browse Listings</a></li>
-    <li><a href="#">Store Map</a></li>
-    <li><a href="#">My Messages</a></li>
-    <li><a href="{% url 'profile' %}">My Profile</a></li>
-</ul>
+<section class="welcome-panel">
+    <p class="eyebrow">BUYER DASHBOARD</p>
+    <h1>Welcome, {{ user.first_name|default:user.username }}.</h1>
+    <p>Discover secondhand style and local shops across Cebu.</p>
+</section>
+<div class="dashboard-grid">
+    <article class="content-card">
+        <p class="eyebrow">FOR YOU</p>
+        <h2>Featured finds</h2>
+        <p class="muted">Listings from local sellers will appear here as the marketplace grows.</p>
+    </article>
+    <article class="content-card">
+        <p class="eyebrow">AROUND {{ user.city|upper }}</p>
+        <h2>Nearby stores</h2>
+        <p class="muted">Explore verified ukay-ukay shops in your area.</p>
+    </article>
+</div>
+<section class="content-card dashboard-action">
+    <div>
+        <h2>Keep your account up to date</h2>
+        <p class="muted">Add your contact details and location to personalize your experience.</p>
+    </div>
+    <a class="button button-primary" href="{% url 'profile' %}">View my profile</a>
+</section>
 {% endblock %}

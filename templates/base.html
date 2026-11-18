@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head><title>UkayTaNa – Find Ukay-Ukay in Cebu</title></head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Find ukay-ukay stores and secondhand fashion in Cebu.">
+    <title>{% block title %}UkayTaNa – Find Ukay-Ukay in Cebu{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
 <body>
-    <header>
-        <h1><a href="{% url 'dashboard' %}">UkayTaNa</a></h1>
-        <small>Map-verified ukay-ukay stores and listings in Metro Cebu</small>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="{% url 'dashboard' %}">UkayTaNa</a>
+            <span class="tagline">Find your next favorite ukay in Cebu</span>
+            <nav aria-label="Main navigation">
+            {% if user.is_authenticated %}
+                <span class="nav-greeting">Hi, {{ user.first_name|default:user.username }}</span>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'profile' %}">My profile</a>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button class="nav-logout" type="submit">Log out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Log in</a>
+                <a class="nav-signup" href="{% url 'signup' %}">Create account</a>
+            {% endif %}
+            </nav>
+        </div>
     </header>
-    <nav>
-    {% if user.is_authenticated %}
-        Hi, {{ user.first_name|default:user.username }} ({{ user.get_role_display }})
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <form method="post" action="{% url 'logout' %}" style="display:inline">
-            {% csrf_token %}
-            <button type="submit">Log out</button>
-        </form>
-    {% else %}
-        <a href="{% url 'login' %}">Log in</a>
-        <a href="{% url 'signup' %}">Sign up</a>
-    {% endif %}
-    </nav>
-    <hr>
-    {% for message in messages %}
-        <p class="{{ message.tags }}">{{ message }}</p>
-    {% endfor %}
-    <main>{% block content %}{% endblock %}</main>
+    <main class="page-shell">
+        {% if messages %}
+            <div class="message-stack" aria-live="polite">
+                {% for message in messages %}
+                    <p class="message message-{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <p>UkayTaNa · Discover and support local ukay-ukay shops in Cebu</p>
+    </footer>
 </body>
 </html>

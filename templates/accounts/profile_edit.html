@@ -1,10 +1,17 @@
 {% extends "base.html" %}
+{% block title %}Edit profile · UkayTaNa{% endblock %}
 {% block content %}
-<h2>Edit Profile</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-    <a href="{% url 'profile' %}">Cancel</a>
-</form>
+<section class="form-card form-card-wide">
+    <p class="eyebrow">YOUR ACCOUNT</p>
+    <h1>Edit profile</h1>
+    <p class="muted">Update the details associated with your account.</p>
+    <form method="post" enctype="multipart/form-data" class="account-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button class="button button-primary" type="submit">Save changes</button>
+            <a class="button button-secondary" href="{% url 'profile' %}">Cancel</a>
+        </div>
+    </form>
+</section>
 {% endblock %}
