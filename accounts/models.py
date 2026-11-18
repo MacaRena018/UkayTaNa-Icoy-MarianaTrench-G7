@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.functions import Lower
 
 
 class CustomUser(AbstractUser):
@@ -16,6 +17,13 @@ class CustomUser(AbstractUser):
     shop_name = models.CharField(max_length=100, blank=True)  # sellers only
     bio = models.TextField(blank=True)
     profile_photo = models.ImageField(upload_to="profiles/", blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("email"), name="accounts_user_email_ci_unique"
+            ),
+        ]
 
     def save(self, *args, **kwargs):
         if self.is_superuser:

@@ -60,8 +60,8 @@ databases.
 
 ## Account features
 
-- Buyer and seller registration with unique usernames and email addresses,
-  validated email, and matching passwords.
+- Buyer and seller registration with unique usernames and case-insensitive
+  unique email addresses, validated email, and matching passwords.
 - Django authentication with hashed passwords, login, POST logout, and
   login-protected profile pages.
 - Role-specific dashboards with server-side access checks.

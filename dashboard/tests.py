@@ -28,7 +28,9 @@ class RoleDashboardTests(TestCase):
 
         response = self.client.get(reverse("seller_dashboard"))
 
-        self.assertRedirects(response, reverse("dashboard"))
+        self.assertRedirects(
+            response, reverse("dashboard"), fetch_redirect_response=False
+        )
         self.assertRedirects(
             self.client.get(response.url), reverse("buyer_dashboard")
         )

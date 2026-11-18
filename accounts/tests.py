@@ -51,7 +51,7 @@ class AccountRegistrationTests(TestCase):
     def test_registration_rejects_duplicate_username_and_email(self):
         User.objects.create_user(
             username="existinguser",
-            email="existing@example.com",
+            email="Existing@Example.com",
             password="UkaySecure!2030",
         )
 
@@ -76,6 +76,7 @@ class AccountRegistrationTests(TestCase):
             "email",
             "An account with this email already exists.",
         )
+        self.assertFalse(User.objects.filter(username="anotheruser").exists())
 
     def test_registration_rejects_invalid_email(self):
         response = self.client.post(
@@ -103,7 +104,9 @@ class AccountAuthenticationTests(TestCase):
             {"username": "buyer", "password": "UkaySecure!2030"},
         )
 
-        self.assertRedirects(response, reverse("dashboard"))
+        self.assertRedirects(
+            response, reverse("dashboard"), fetch_redirect_response=False
+        )
         response = self.client.get(reverse("dashboard"))
         self.assertRedirects(response, reverse("buyer_dashboard"))
 

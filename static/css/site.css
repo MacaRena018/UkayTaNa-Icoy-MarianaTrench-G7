@@ -23,6 +23,10 @@ body {
 
 a { color: var(--green); font-weight: 600; }
 a:hover { color: var(--green-dark); }
+a:focus-visible, button:focus-visible {
+    outline: 3px solid rgb(47 104 71 / 35%);
+    outline-offset: 3px;
+}
 
 .site-header {
     background: var(--paper);
@@ -123,6 +127,7 @@ h2 { font-size: 1.3rem; line-height: 1.3; }
     outline: 3px solid rgb(47 104 71 / 15%);
 }
 .account-form input[type="checkbox"] { display: inline-block; width: auto; min-height: auto; }
+.account-form input[type="file"] { min-height: auto; padding: .5rem; }
 .account-form .helptext { display: block; margin-top: .35rem; color: var(--muted); font-size: .85rem; }
 .account-form ul { margin: .4rem 0 0; padding-left: 1.2rem; color: var(--muted); font-size: .85rem; }
 .errorlist { color: var(--rose) !important; }

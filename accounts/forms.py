@@ -30,7 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields["shop_name"].label = "Shop name (sellers only)"
 
     def clean_email(self):
-        email = self.cleaned_data["email"].strip()
+        email = self.cleaned_data["email"].strip().lower()
         if CustomUser.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError(
                 "An account with this email already exists."
@@ -59,7 +59,7 @@ class ProfileForm(forms.ModelForm):
             del self.fields["shop_name"]
 
     def clean_email(self):
-        email = self.cleaned_data["email"].strip()
+        email = self.cleaned_data["email"].strip().lower()
         if CustomUser.objects.filter(email__iexact=email).exclude(
             pk=self.instance.pk
         ).exists():
