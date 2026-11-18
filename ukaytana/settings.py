@@ -1,14 +1,22 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-development-only")
-DEBUG = os.getenv("DEBUG") == "True"
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise ImproperlyConfigured("Set SECRET_KEY in your .env file.")
+
+DEBUG = os.getenv("DEBUG", "False").lower() in {"true", "1", "yes"}
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    if host.strip()
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -50,25 +58,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ukaytana.wsgi.application"
 
-if os.getenv("DB_NAME"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-            "OPTIONS": {"sslmode": "require"},
-        }
+database_variables = ("DB_NAME", "DB_USER", "DB_PASSWORD", "DB_HOST")
+missing_database_variables = [
+    name for name in database_variables if not os.getenv(name)
+]
+if missing_database_variables:
+    missing = ", ".join(missing_database_variables)
+    raise ImproperlyConfigured(f"Set PostgreSQL settings in .env: {missing}.")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["DB_NAME"],
+        "USER": os.environ["DB_USER"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
+        "HOST": os.environ["DB_HOST"],
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {"sslmode": os.getenv("DB_SSLMODE", "require")},
+        "CONN_MAX_AGE": 60,
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -83,6 +92,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 

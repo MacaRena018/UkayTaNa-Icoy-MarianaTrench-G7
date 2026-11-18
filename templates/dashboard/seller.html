@@ -1,12 +1,28 @@
 {% extends "base.html" %}
+{% block title %}Seller dashboard · UkayTaNa{% endblock %}
 {% block content %}
-<h2>{{ user.shop_name|default:"My Shop" }}: Seller Dashboard</h2>
-<p>Active listings: 0 | Sold: 0 | Unread messages: 0</p>
-<h3>Manage Your Shop</h3>
-<ul>
-    <li><a href="#">Create a Listing</a></li>
-    <li><a href="#">My Listings (publish / unpublish / mark as sold)</a></li>
-    <li><a href="#">Buyer Messages</a></li>
-    <li><a href="{% url 'profile' %}">My Profile</a></li>
-</ul>
+<section class="welcome-panel">
+    <p class="eyebrow">SELLER DASHBOARD</p>
+    <h1>{{ user.shop_name|default:"My shop" }}</h1>
+    <p>Manage your seller profile and get ready to share your finds.</p>
+</section>
+<div class="dashboard-grid">
+    <article class="content-card">
+        <p class="eyebrow">YOUR SHOP</p>
+        <h2>Listings</h2>
+        <p class="muted">Listing management will be available as the marketplace features are added.</p>
+    </article>
+    <article class="content-card">
+        <p class="eyebrow">YOUR COMMUNITY</p>
+        <h2>Buyer messages</h2>
+        <p class="muted">Messages from interested shoppers will appear here.</p>
+    </article>
+</div>
+<section class="content-card dashboard-action">
+    <div>
+        <h2>Make your shop stand out</h2>
+        <p class="muted">Keep your shop name, contact details, and bio current.</p>
+    </div>
+    <a class="button button-primary" href="{% url 'profile_edit' %}">Edit shop profile</a>
+</section>
 {% endblock %}

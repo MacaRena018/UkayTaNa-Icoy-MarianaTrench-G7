@@ -18,7 +18,24 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for name in ("email", "first_name", "last_name"):
             self.fields[name].required = True
+        self.fields["username"].help_text = (
+            "Use letters, numbers, and @ . + - _ only. No spaces."
+        )
+        self.fields["username"].error_messages["unique"] = (
+            "That username is already taken. Choose another."
+        )
+        self.fields["email"].error_messages["unique"] = (
+            "An account with this email already exists."
+        )
         self.fields["shop_name"].label = "Shop name (sellers only)"
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip()
+        if CustomUser.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists."
+            )
+        return email
 
     def clean(self):
         cleaned = super().clean()
@@ -35,5 +52,18 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["email"].error_messages["unique"] = (
+            "An account with this email already exists."
+        )
         if self.instance.role != CustomUser.Role.SELLER:
             del self.fields["shop_name"]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip()
+        if CustomUser.objects.filter(email__iexact=email).exclude(
+            pk=self.instance.pk
+        ).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists."
+            )
+        return email
