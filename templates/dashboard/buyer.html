@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
+<h3>Featured Listings</h3>
+<p>Women's secondhand clothing from sellers around Metro Cebu will appear here.</p>
+<h3>Nearby Verified Stores</h3>
+<p>Field-verified ukay-ukay stores near {{ user.barangay|default:user.city }} will appear here.</p>
+<h3>Quick Links</h3>
+<ul>
+    <li><a href="#">Browse Listings</a></li>
+    <li><a href="#">Store Map</a></li>
+    <li><a href="#">My Messages</a></li>
+    <li><a href="{% url 'profile' %}">My Profile</a></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ user.shop_name|default:"My Shop" }}: Seller Dashboard</h2>
+<p>Active listings: 0 | Sold: 0 | Unread messages: 0</p>
+<h3>Manage Your Shop</h3>
+<ul>
+    <li><a href="#">Create a Listing</a></li>
+    <li><a href="#">My Listings (publish / unpublish / mark as sold)</a></li>
+    <li><a href="#">Buyer Messages</a></li>
+    <li><a href="{% url 'profile' %}">My Profile</a></li>
+</ul>
+{% endblock %}

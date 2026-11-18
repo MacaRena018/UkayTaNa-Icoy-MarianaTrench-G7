@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Join UkayTaNa</h2>
+<p>Shoppers: find verified ukay-ukay stores and browse listings. Sellers: publish your shop and items.</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create account</button>
+</form>
+<p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}
