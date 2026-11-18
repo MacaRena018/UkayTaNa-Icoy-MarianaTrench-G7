@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+fieldsets = UserAdmin.fieldsets + (
+    ("UkayTaNa", {"fields": ("role", "contact_number", "barangay",
+                             "city", "shop_name", "bio", "profile_photo")}),
+)
