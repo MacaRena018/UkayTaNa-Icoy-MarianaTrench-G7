@@ -67,3 +67,50 @@ databases.
 - Role-specific dashboards with server-side access checks.
 - Personal profile viewing and editing, including seller shop details and an
   optional profile photo.
+
+## Core feature: Item Listing & Marketplace (PD2)
+
+Sellers publish women's secondhand clothing listings and buyers browse them.
+The feature works end to end: PostgreSQL/Supabase models, Django views, forms
+and URL routes, and Django templates.
+
+- **Seller (Create / Update / Delete):** create, edit and delete own listings
+  (title, category, description, size, condition, price, up to 5 photos);
+  publish, unpublish and mark as sold from **My listings**.
+- **Buyer (Read):** browse published listings with keyword search, filters
+  (category, size, condition, price range) and sorting (newest, oldest, price).
+- **Rules:** price must be greater than ₱0; at most 5 photos (5 MB each, images
+  only); a listing needs at least one photo to be published; sold listings can
+  no longer be edited or republished; sellers can only change their own
+  listings; buyers only see published listings from active sellers.
+- **Models:** `Listing` (ForeignKey to `CustomUser` as seller) and
+  `ListingPhoto` (ForeignKey to `Listing`).
+- **Dashboards:** sellers see listing counts and their latest listings, buyers
+  see the latest published listings, administrators see listing totals.
+
+Payments and meetups are arranged by users outside the system. Uploaded photos
+are stored in the local `media/` folder (the database stores the file path).
+
+### Setup steps
+
+1. Copy `.env.example` to `.env` and fill in your own database values.
+2. Create and activate a virtual environment, then install the packages:
+
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   python -m pip install -r requirements.txt
+   ```
+
+3. Apply the migrations and create an admin account:
+
+   ```powershell
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+
+4. Start the server and open http://127.0.0.1:8000/:
+
+   ```powershell
+   python manage.py runserver
+   ```
