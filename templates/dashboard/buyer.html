@@ -10,7 +10,8 @@
     <article class="content-card">
         <p class="eyebrow">FOR YOU</p>
         <h2>Featured finds</h2>
-        <p class="muted">Listings from local sellers will appear here as the marketplace grows.</p>
+        <p class="muted">Fresh listings from local sellers.</p>
+        <a class="button button-primary" href="{% url 'listing_browse' %}">Browse all listings</a>
     </article>
     <article class="content-card">
         <p class="eyebrow">AROUND {{ user.city|upper }}</p>
@@ -18,6 +19,12 @@
         <p class="muted">Explore verified ukay-ukay shops in your area.</p>
     </article>
 </div>
+{% if featured_listings %}
+<h2 class="dash-heading">Latest listings</h2>
+<div class="listing-grid">
+    {% for listing in featured_listings %}{% include "listings/_card.html" %}{% endfor %}
+</div>
+{% endif %}
 <section class="content-card dashboard-action">
     <div>
         <h2>Keep your account up to date</h2>
