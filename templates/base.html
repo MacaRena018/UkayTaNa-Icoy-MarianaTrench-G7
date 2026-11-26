@@ -12,12 +12,13 @@
     <header class="site-header">
         <div class="header-inner">
             <a class="brand" href="{% url 'dashboard' %}">UkayTaNa</a>
-                            {% if user.role == 'SELLER' %}<a href="{% url 'my_listings' %}">My listings</a>{% endif %}
             <span class="tagline">Find your next favorite ukay in Cebu</span>
             <nav aria-label="Main navigation">
             {% if user.is_authenticated %}
                 <span class="nav-greeting">Hi, {{ user.first_name|default:user.username }}</span>
                 <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% if user.role == 'SELLER' %}<a href="{% url 'my_listings' %}">My listings</a>
+                {% elif user.role == 'BUYER' %}<a href="{% url 'listing_browse' %}">Browse</a>{% endif %}
                 <a href="{% url 'profile' %}">My profile</a>
                 <form method="post" action="{% url 'logout' %}" class="logout-form">
                     {% csrf_token %}

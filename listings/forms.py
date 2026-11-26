@@ -102,3 +102,39 @@ class ListingForm(forms.ModelForm):
             photo.delete()
         for image in self.cleaned_data.get("photos") or []:
             ListingPhoto.objects.create(listing=listing, image=image)
+
+
+class ListingFilterForm(forms.Form):
+    SORT_CHOICES = [
+        ("newest", "Newest first"),
+        ("oldest", "Oldest first"),
+        ("price_low", "Price: low to high"),
+        ("price_high", "Price: high to low"),
+    ]
+
+    q = forms.CharField(required=False, label="Search")
+    category = forms.ChoiceField(
+        required=False, choices=[("", "All categories")] + Listing.Category.choices
+    )
+    size = forms.ChoiceField(
+        required=False, choices=[("", "All sizes")] + Listing.Size.choices
+    )
+    condition = forms.ChoiceField(
+        required=False, choices=[("", "Any condition")] + Listing.Condition.choices
+    )
+    min_price = forms.DecimalField(
+        required=False, min_value=0, decimal_places=2, label="Min ₱"
+    )
+    max_price = forms.DecimalField(
+        required=False, min_value=0, decimal_places=2, label="Max ₱"
+    )
+    sort = forms.ChoiceField(required=False, choices=SORT_CHOICES)
+
+    def clean(self):
+        cleaned = super().clean()
+        low, high = cleaned.get("min_price"), cleaned.get("max_price")
+        if low is not None and high is not None and low > high:
+            self.add_error(
+                "max_price", "Maximum price cannot be lower than the minimum."
+            )
+        return cleaned
