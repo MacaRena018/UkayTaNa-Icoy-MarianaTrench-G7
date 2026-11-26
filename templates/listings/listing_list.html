@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Browse listings · UkayTaNa{% endblock %}
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">MARKETPLACE</p>
+        <h1>Browse secondhand finds</h1>
+        <p class="muted">Ukay-ukay clothing from local Cebu sellers.</p>
+    </div>
+</section>
+<form method="get" class="content-card filter-bar">
+    <div class="filter-row">
+        <label>Search {{ filter_form.q }}</label>
+        <label>Category {{ filter_form.category }}</label>
+        <label>Size {{ filter_form.size }}</label>
+        <label>Condition {{ filter_form.condition }}</label>
+        <label>{{ filter_form.min_price.label }} {{ filter_form.min_price }}</label>
+        <label>{{ filter_form.max_price.label }} {{ filter_form.max_price }}</label>
+        <label>Sort by {{ filter_form.sort }}</label>
+    </div>
+    {% for field in filter_form %}{% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}{% endfor %}
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Apply</button>
+        <a class="button button-secondary" href="{% url 'listing_browse' %}">Clear</a>
+    </div>
+</form>
+{% if listings %}
+<p class="muted">{{ page_obj.paginator.count }} listing{{ page_obj.paginator.count|pluralize }} found</p>
+<div class="listing-grid">
+    {% for listing in listings %}{% include "listings/_card.html" %}{% endfor %}
+</div>
+{% if is_paginated %}
+<nav class="pager" aria-label="Pages">
+    {% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next →</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<section class="content-card empty-state">
+    <h2>No listings found</h2>
+    <p class="muted">Try clearing a filter or searching for something else.</p>
+</section>
+{% endif %}
+{% endblock %}

@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -13,7 +13,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from accounts.mixins import RoleRequiredMixin
 from accounts.models import CustomUser
 
-from .forms import ListingForm
+from .forms import ListingFilterForm, ListingForm
 from .models import Listing
 
 Role = CustomUser.Role
@@ -232,3 +232,47 @@ class ListingStatusView(LoginRequiredMixin, View):
         ):
             return target
         return reverse("admin_listings" if as_admin else "my_listings")
+
+
+class ListingBrowseView(LoginRequiredMixin, ListView):
+    """Read: browse, search, filter and sort published listings."""
+
+    template_name = "listings/listing_list.html"
+    context_object_name = "listings"
+    paginate_by = 12
+
+    def get_queryset(self):
+        queryset = _with_photos(
+            Listing.objects.filter(status=Status.PUBLISHED, seller__is_active=True)
+        )
+        self.filter_form = ListingFilterForm(self.request.GET)
+        self.filter_form.is_valid()
+        data = self.filter_form.cleaned_data
+
+        if data.get("q"):
+            term = data["q"].strip()
+            queryset = queryset.filter(
+                Q(title__icontains=term) | Q(description__icontains=term)
+            )
+        for field in ("category", "size", "condition"):
+            if data.get(field):
+                queryset = queryset.filter(**{field: data[field]})
+        if data.get("min_price") is not None:
+            queryset = queryset.filter(price__gte=data["min_price"])
+        if data.get("max_price") is not None:
+            queryset = queryset.filter(price__lte=data["max_price"])
+
+        ordering = {
+            "oldest": "created_at",
+            "price_low": "price",
+            "price_high": "-price",
+        }.get(data.get("sort"), "-created_at")
+        return queryset.order_by(ordering, "-pk")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        params = self.request.GET.copy()
+        params.pop("page", None)
+        context["filter_form"] = self.filter_form
+        context["querystring"] = params.urlencode()
+        return context
