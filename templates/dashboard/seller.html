@@ -10,7 +10,8 @@
     <article class="content-card">
         <p class="eyebrow">YOUR SHOP</p>
         <h2>Listings</h2>
-        <p class="muted">Listing management will be available as the marketplace features are added.</p>
+        <p class="muted">{{ published_count }} published · {{ draft_count }} draft · {{ sold_count }} sold</p>
+        <a class="button button-primary" href="{% url 'my_listings' %}">Manage my listings</a>
     </article>
     <article class="content-card">
         <p class="eyebrow">YOUR COMMUNITY</p>
@@ -18,6 +19,12 @@
         <p class="muted">Messages from interested shoppers will appear here.</p>
     </article>
 </div>
+{% if recent_listings %}
+<h2 class="dash-heading">Your latest listings</h2>
+<div class="listing-grid">
+    {% for listing in recent_listings %}{% include "listings/_card.html" %}{% endfor %}
+</div>
+{% endif %}
 <section class="content-card dashboard-action">
     <div>
         <h2>Make your shop stand out</h2>
