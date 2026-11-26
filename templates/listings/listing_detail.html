@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.title }} · UkayTaNa{% endblock %}
+{% block content %}
+<p><a href="{% if is_owner %}{% url 'my_listings' %}{% else %}{% url 'dashboard' %}{% endif %}">← Back</a></p>
+<section class="content-card detail-layout">
+    <div class="detail-photos">
+        {% for photo in listing.photos.all %}
+            <a href="{{ photo.image.url }}" target="_blank" rel="noopener"><img src="{{ photo.image.url }}" alt="{{ listing.title }} photo {{ forloop.counter }}"></a>
+        {% empty %}
+            <div class="listing-noimg">No photos yet</div>
+        {% endfor %}
+    </div>
+    <div class="detail-info">
+        <p class="eyebrow">{{ listing.get_category_display|upper }}</p>
+        <h1>{{ listing.title }}</h1>
+        <p class="listing-price big">₱{{ listing.price|floatformat:2 }}</p>
+        <span class="badge badge-{{ listing.status|lower }}">{{ listing.get_status_display }}</span>
+        <dl class="profile-details">
+            <div><dt>Size</dt><dd>{{ listing.get_size_display }}</dd></div>
+            <div><dt>Condition</dt><dd>{{ listing.get_condition_display }}</dd></div>
+            <div><dt>Seller</dt><dd>{{ listing.seller.shop_name|default:listing.seller.username }}</dd></div>
+            <div><dt>Location</dt><dd>{{ listing.seller.barangay|default:"—" }}, {{ listing.seller.city }}</dd></div>
+            <div><dt>Posted</dt><dd>{{ listing.created_at|date:"M d, Y" }}</dd></div>
+        </dl>
+        <h2>Description</h2>
+        <p>{{ listing.description|linebreaksbr }}</p>
+        <p class="muted">Payment and meetup are arranged directly with the seller.</p>
+        {% if is_owner %}
+        <div class="form-actions">
+            {% if not listing.is_sold %}<a class="button button-primary" href="{% url 'listing_edit' listing.pk %}">Edit</a>{% endif %}
+            <a class="button button-secondary" href="{% url 'listing_delete' listing.pk %}">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

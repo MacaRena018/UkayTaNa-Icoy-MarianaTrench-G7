@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Delete listing · UkayTaNa{% endblock %}
+{% block content %}
+<section class="form-card">
+    <p class="eyebrow">CONFIRM</p>
+    <h1>Delete this listing?</h1>
+    <p>“{{ listing.title }}” and its photos will be permanently removed. This cannot be undone.</p>
+    <form method="post" class="form-actions">
+        {% csrf_token %}
+        <button class="button button-primary danger-btn" type="submit">Yes, delete</button>
+        <a class="button button-secondary" href="{{ listing.get_absolute_url }}">Cancel</a>
+    </form>
+</section>
+{% endblock %}

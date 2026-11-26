@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit listing{% else %}New listing{% endif %} · UkayTaNa{% endblock %}
+{% block content %}
+<section class="form-card form-card-wide">
+    <p class="eyebrow">YOUR SHOP</p>
+    <h1>{% if object %}Edit listing{% else %}Create a listing{% endif %}</h1>
+    <p class="muted">Share a ukay find with shoppers across Cebu. Add up to 5 photos.</p>
+    <form method="post" enctype="multipart/form-data" class="account-form" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="field-error">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+            {% if field.name != "remove_photos" %}
+            <p>
+                {{ field.label_tag }}{{ field }}
+                {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+            </p>
+            {% endif %}
+        {% endfor %}
+        {% if object and object.photos.all %}
+        <fieldset class="photo-manage">
+            <legend>Current photos (tick to remove)</legend>
+            {% for photo in object.photos.all %}
+            <label class="photo-tile"><img src="{{ photo.image.url }}" alt="Photo {{ forloop.counter }}">
+                <span><input type="checkbox" name="remove_photos" value="{{ photo.pk }}"> Remove</span></label>
+            {% endfor %}
+        </fieldset>
+        {% endif %}
+        <div class="form-actions">
+            {% if object and not object.is_draft %}
+                <button class="button button-primary" type="submit" name="action" value="save">Save changes</button>
+            {% else %}
+                <button class="button button-primary" type="submit" name="action" value="publish">Save &amp; publish</button>
+                <button class="button button-secondary" type="submit" name="action" value="draft">Save as draft</button>
+            {% endif %}
+            <a class="button button-secondary" href="{% url 'my_listings' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}My listings · UkayTaNa{% endblock %}
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">YOUR SHOP</p>
+        <h1>My listings</h1>
+    </div>
+    <a class="button button-primary" href="{% url 'listing_create' %}">+ New listing</a>
+</section>
+<nav class="tabs" aria-label="Filter by status">
+    {% for value, label, total in status_tabs %}
+    <a class="{% if value == current_status %}active{% endif %}" href="?{% if value %}status={{ value }}{% endif %}">{{ label }} ({{ total }})</a>
+    {% endfor %}
+</nav>
+{% if listings %}
+<div class="listing-grid">
+    {% for listing in listings %}
+      <div class="listing-cell">
+        {% include "listings/_card.html" %}
+        <div class="listing-actions">
+            <span class="badge badge-{{ listing.status|lower }}">{{ listing.get_status_display }}</span>
+            {% if listing.is_draft %}
+                <form method="post" action="{% url 'listing_status' listing.pk 'publish' %}">{% csrf_token %}<button class="link-btn">Publish</button></form>
+            {% elif listing.is_published %}
+                <form method="post" action="{% url 'listing_status' listing.pk 'unpublish' %}">{% csrf_token %}<button class="link-btn">Unpublish</button></form>
+                <form method="post" action="{% url 'listing_status' listing.pk 'sold' %}">{% csrf_token %}<button class="link-btn">Mark sold</button></form>
+            {% endif %}
+            {% if not listing.is_sold %}<a href="{% url 'listing_edit' listing.pk %}">Edit</a>{% endif %}
+            <a class="danger" href="{% url 'listing_delete' listing.pk %}">Delete</a>
+        </div>
+      </div>
+    {% endfor %}
+</div>
+{% if is_paginated %}
+<nav class="pager">
+    {% if page_obj.has_previous %}<a href="?{% if current_status %}status={{ current_status }}&{% endif %}page={{ page_obj.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?{% if current_status %}status={{ current_status }}&{% endif %}page={{ page_obj.next_page_number }}">Next →</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<section class="content-card empty-state">
+    <h2>No listings here yet</h2>
+    <p class="muted">Post your first ukay find to reach shoppers across Cebu.</p>
+    <a class="button button-primary" href="{% url 'listing_create' %}">Create a listing</a>
+</section>
+{% endif %}
+{% endblock %}
