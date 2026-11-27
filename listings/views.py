@@ -233,6 +233,7 @@ class ListingStatusView(LoginRequiredMixin, View):
             return target
         return reverse("admin_listings" if as_admin else "my_listings")
 
+
 class ListingBrowseView(LoginRequiredMixin, ListView):
     """Read: browse, search, filter and sort published listings."""
 
@@ -246,7 +247,7 @@ class ListingBrowseView(LoginRequiredMixin, ListView):
         )
         self.filter_form = ListingFilterForm(self.request.GET)
         self.filter_form.is_valid()
-        data = getattr(self.filter_form, "cleaned_data", {})
+        data = self.filter_form.cleaned_data
 
         if data.get("q"):
             term = data["q"].strip()

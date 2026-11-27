@@ -103,6 +103,7 @@ class ListingForm(forms.ModelForm):
         for image in self.cleaned_data.get("photos") or []:
             ListingPhoto.objects.create(listing=listing, image=image)
 
+
 class ListingFilterForm(forms.Form):
     SORT_CHOICES = [
         ("newest", "Newest first"),
