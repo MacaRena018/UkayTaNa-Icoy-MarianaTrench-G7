@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ listing.title }} · UkayTaNa{% endblock %}
 {% block content %}
-<p><a href="{% if is_owner %}{% url 'my_listings' %}{% else %}{% url 'dashboard' %}{% endif %}">← Back</a></p>
+<p><a href="{% if is_owner %}{% url 'my_listings' %}{% else %}{% url 'listing_browse' %}{% endif %}">← Back</a></p>
 <section class="content-card detail-layout">
     <div class="detail-photos">
         {% for photo in listing.photos.all %}
